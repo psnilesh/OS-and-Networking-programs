@@ -53,7 +53,9 @@ class SmtpServer:
         self.next_handler = self.handle_helo
         logging.info("Connected with %s." % str(addr))
         self.sender_ip = addr[0]
-        send_response(self.sock, addr, Response(220, socket.gethostname() + ' (Linux) MySMTPServer v0.1'))
+        send_response(self.sock, addr, 
+            Response(220, 
+                     socket.gethostname() + ' (Linux) MySMTPServer v0.1'))
 
     def accept(self):
         if not self.connected:
@@ -92,7 +94,8 @@ class SmtpServer:
         to = self.msg[lt_index + 1 : gt_index]
         if not is_valid_mail(to):
             return Response(550,  ('5.1.1 %s: Recipient address rejected: ' + \
-                'User unknown in local recipient table') % self.msg[lt_index : gt_index + 1])
+                'User unknown in local recipient table') % \
+                self.msg[lt_index : gt_index + 1])
         self.next_handler = self.handle_data
         self.recps.append(to)
         return Response(250, '2.1.5 Ok')

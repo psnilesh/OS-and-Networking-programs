@@ -15,13 +15,13 @@
 #define MSG_MAX_COUNT   10
 
 struct sv_request {
-	pid_t pid;
-	char  qname[QNAME_MAX_SIZE + 1];
-	char  buffer[MSG_MAX_SIZE  + 1];
+    pid_t pid;
+    char  qname[QNAME_MAX_SIZE + 1];
+    char  buffer[MSG_MAX_SIZE  + 1];
 };
 
 struct sv_response {
-	char buffer[MSG_MAX_SIZE + 1];
+    char buffer[MSG_MAX_SIZE + 1];
 };
 
 

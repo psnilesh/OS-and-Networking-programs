@@ -20,7 +20,8 @@
  */
 
 int main() {
-	// Stores process ID of process running /bin/cat and /usr/bin/awk respectively.
+	// Stores process ID of process running /bin/cat and /usr/bin/awk 
+	// respectively.
 	pid_t catPid, awkPid;
 	// Two pipes for IPC between cat <-- Cat-pipe --> awk <-- Awk-Pipe --> sort
 	int catPipe[2], awkPipe[2];
@@ -28,7 +29,8 @@ int main() {
 		perror("pipe: catPipe");
 	catPid = fork(); // Creates a new process
 	if(catPid == 0) {
-		// Code segment of the child process. Overwrite with a new /bin/cat image.
+		// Code segment of the child process. Overwrite with a new /
+		// bin/cat image.
 		close(catPipe[0]); // Close the reading end.
 		// STDOUT of this process is redirected to the catPipe
 		if (dup2(catPipe[1], STDOUT_FILENO) == -1)
@@ -38,8 +40,11 @@ int main() {
 		// execl method should never return, print an error if it does.
 		perror("cat");
 	}
-	else if (catPid > 0) { /* If fork() returns a +ve value, we are in the code segment of the parent process and */
-        close(catPipe[1]); /* the return value is the process_id of the child process.                            */
+	else if (catPid > 0) { 
+		// If fork() returns a +ve value, we are in the code segment of the 
+		// parent process the return value is the process_id of the child 
+		// process.   
+        close(catPipe[1]);
 		// Init a new pipe for awk-sort IPC.
 		if (pipe(awkPipe) == -1 ) 
 			perror("pipe: awkPipe");
@@ -50,18 +55,22 @@ int main() {
 			// The STDIN of awk process is the output of process cat.
 			if (dup2(catPipe[0], STDIN_FILENO) == -1)
 				perror("dup2: catPipe[0], STDIN_FILENO");
-			// STDOUt of awk process is redirected to awkPipe so that sort can read it.
+			// STDOUt of awk process is redirected to awkPipe so that sort can 
+			// read it.
 			if (dup2(awkPipe[1], STDOUT_FILENO) == -1)
 				perror("dup2: catPipe[1], STDOUT_FILENO");
-			execl("/usr/bin/awk", "awk", "-F", ":", "{ print $1; }", "-", (char *) NULL);
+			execl("/usr/bin/awk", "awk", "-F", ":", "{ print $1; }", "-", 
+				(char *) NULL);
 			// Again, if execl returns, it's an error.
 			perror("execl : awk");
 		}
 		else if(awkPid > 0) {
 			// Run sort here..
-			// Always close the unused end of the pipe, if not, it results in  undefind behaviour.
+			// Always close the unused end of the pipe, if not, it results in  
+			// undefind behaviour.
 			close(awkPipe[1]);
-			// STDIN of sort process is setup as the awkPipe. So in-effect, the output of awk is fed as the input to the sort process.
+			// STDIN of sort process is setup as the awkPipe. So in-effect, the 
+			// output of awk is fed as the input to the sort process.
 			// Hence, the result is achieved.
 			if (dup2(awkPipe[0], STDIN_FILENO) == -1)
 				perror("dup2: awkPipe[0], STDIN");

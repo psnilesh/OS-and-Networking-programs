@@ -3,15 +3,15 @@ import pwd
 import spwd
 
 
-"""
-    Checks whether the given username and password
-    combo exists in the system.
-    @return User ID of the user on success, None on failure.
-"""
+
 
 
 def authenticate(username='', passwd=''):
-    # Fetch user id from passwd file first
+    """
+        Checks whether the given username and password
+        combo exists in the system.
+        @return User ID of the user on success, None on failure.
+    """
     try:
         st_user = pwd.getpwnam(username)
         # Extract password from /etc/shadow file
